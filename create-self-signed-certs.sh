@@ -14,7 +14,7 @@ Help()
    echo "r     Remove CAcert and create a new one (default=true)."
    echo "n     Server domain name (required)."
    echo "i     Server IP address (required)."
-   echo "p     Password for importing/exporting the client PKCS#12 certificate."
+   echo "p     Password for importing/exporting the client PKCS#12 certificate (default=root)."
    echo
    echo "Example: $0 -n myserver.domain.com -i 66.66.66.66 -r false -p pass"
 }
