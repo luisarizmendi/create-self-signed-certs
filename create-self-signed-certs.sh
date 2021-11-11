@@ -70,9 +70,9 @@ if [[ "$CLIENTPASS" == ""  ]]; then
 fi
 
 
-SUBJ_CACERT="/C=ES/ST=Madrid/L=Madrid/O=None/CN=$(hostname)"
-SUBJ_SERVER="/C=ES/ST=Madrid/L=Madrid/O=None/CN=${SERVER_NAME}"
-SUBJ_CLIENT="/C=ES/ST=Madrid/L=Madrid/O=None/CN=$(hostname)"
+SUBJ_CACERT="/CN=$(hostname)/ST=Madrid/C=ES/O=None/OU=None"
+SUBJ_SERVER="/CN=${SERVER_NAME}/ST=Madrid/C=ES/O=None/OU=None"
+SUBJ_CLIENT="/CN=$(hostname)/ST=Madrid/C=ES/O=None/OU=None"
 
 
 
