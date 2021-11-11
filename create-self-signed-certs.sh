@@ -27,7 +27,7 @@ Help()
 SERVER_NAME=""
 SERVER_IP=""
 CLIENTPASS=""
-REMOVE_CA=true
+REMOVE_CA="true"
 
 
 
@@ -110,7 +110,7 @@ EOF
 
 
 
-if [[ $REMOVE_CA ]];then
+if [[ $REMOVE_CA == "true" ]];then
   rm -rf OUTPUT/cacert.pem
   rm -rf OUTPUT/cakey.pem
 
@@ -188,4 +188,3 @@ rm -f server_ext.cnf
    echo ""
    echo ""
 
-   echo "$REMOVE_CA $SERVER_NAME $SERVER_IP $CLIENTPASS"
