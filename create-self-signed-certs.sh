@@ -8,15 +8,15 @@ Help()
    # Display Help
    echo "This Script creates certificates and private keys"
    echo
-   echo "Syntax: $0 [-n|-i|-k|-p]"
+   echo "Syntax: $0 [-n|-i|-r|-p]"
    echo ""
    echo "options:"
-   echo "k     Keep old CAcert (it does not create a new one)."
+   echo "r     Remove CAcert and create a new one (default=true)."
    echo "n     Server domain name (required)."
    echo "i     Server IP address (required)."
    echo "p     Password for importing/exporting the client PKCS#12 certificate."
    echo
-   echo "Example: $0 -n myserver.domain.com -i 66.66.66.66"
+   echo "Example: $0 -n myserver.domain.com -i 66.66.66.66 -r false -p pass"
 }
 
 ############################################################
@@ -35,10 +35,10 @@ REMOVE_CA=true
 # Process the input options. Add options as needed.        #
 ############################################################
 # Get the options
-while getopts ":n:i:k:p:" option; do
+while getopts ":n:i:r:p:" option; do
    case $option in
-      k)
-         REMOVE_CA=false;;
+      r)
+         REMOVE_CA=$OPTARG;;
       n)
          SERVER_NAME=$OPTARG;;
       i)
@@ -53,7 +53,6 @@ while getopts ":n:i:k:p:" option; do
    esac
 done
 
-echo "$SERVER_NAME -  $SERVER_IP"
 
 if [[ "$SERVER_NAME" == "" || "$SERVER_IP" == "" ]]; then
   echo ""
@@ -188,3 +187,5 @@ rm -f server_ext.cnf
    echo "The certificates have been created in the OUPUT directory"
    echo ""
    echo ""
+
+   echo "$REMOVE_CA $SERVER_NAME $SERVER_IP $CLIENTPASS"
