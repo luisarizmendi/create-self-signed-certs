@@ -58,8 +58,8 @@ if [[ "$SERVER_NAME" == "" || "$SERVER_IP" == "" ]]; then
   echo ""
   echo "Error: You need to include the server name and the server IP with the options -s and -i"
   echo ""
-  echo "Example: $0 -n myserver.domain.com -i 66.66.66.66"
   echo ""
+  Help
   exit
 fi
 
