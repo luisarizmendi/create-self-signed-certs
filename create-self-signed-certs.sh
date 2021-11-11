@@ -8,12 +8,13 @@ Help()
    # Display Help
    echo "This Script creates certificates and private keys"
    echo
-   echo "Syntax: $0 [-n|-i|-k]"
+   echo "Syntax: $0 [-n|-i|-k|-p]"
    echo ""
    echo "options:"
    echo "k     Keep old CAcert (it does not create a new one)."
    echo "n     Server domain name (required)."
    echo "i     Server IP address (required)."
+   echo "p     Password for importing/exporting the client PKCS#12 certificate."
    echo
    echo "Example: $0 -n myserver.domain.com -i 66.66.66.66"
 }
@@ -25,9 +26,8 @@ Help()
 ############################################################
 SERVER_NAME=""
 SERVER_IP=""
+CLIENTPASS=""
 REMOVE_CA=true
-
-
 
 
 
@@ -35,7 +35,7 @@ REMOVE_CA=true
 # Process the input options. Add options as needed.        #
 ############################################################
 # Get the options
-while getopts ":n:i:k:" option; do
+while getopts ":n:i:k:p:" option; do
    case $option in
       k)
          REMOVE_CA=false;;
@@ -43,6 +43,8 @@ while getopts ":n:i:k:" option; do
          SERVER_NAME=$OPTARG;;
       i)
          SERVER_IP=$OPTARG;;
+      p)
+         CLIENTPASS=$OPTARG;;
      \?) # Invalid option
          echo "Error: Invalid option"
          echo ""
@@ -63,12 +65,14 @@ if [[ "$SERVER_NAME" == "" || "$SERVER_IP" == "" ]]; then
 fi
 
 
+if [[ "$CLIENTPASS" == ""  ]]; then
+  CLIENTPASS="root"
+fi
 
 
 SUBJ_CACERT="/C=ES/ST=Madrid/L=Madrid/O=None/CN=$(hostname)"
 SUBJ_SERVER="/C=ES/ST=Madrid/L=Madrid/O=None/CN=${SERVER_NAME}"
 SUBJ_CLIENT="/C=ES/ST=Madrid/L=Madrid/O=None/CN=$(hostname)"
-
 
 
 
@@ -140,6 +144,8 @@ openssl genrsa -out OUTPUT/client.key.pem 4096
 openssl req -new -subj ${SUBJ_CLIENT} -key OUTPUT/client.key.pem -out OUTPUT/client.csr
 openssl ca -config openssl.cnf -extfile client_ext.cnf -days 3650 -notext -batch -in OUTPUT/client.csr -out OUTPUT/client.cert.pem
 
+openssl pkcs12 -export -out OUTPUT/client.cert.p12 -in OUTPUT/client.cert.pem -inkey OUTPUT/client.key.pem -passin pass:${CLIENTPASS} -passout pass:${CLIENTPASS}
+
 chmod 400 OUTPUT/client.cert.pem
 
 rm -f OUTPUT/client.csr
@@ -172,3 +178,13 @@ rm -f index.*
 
 rm -f client_ext.cnf
 rm -f server_ext.cnf
+
+
+
+
+ # Display Info
+   echo ""
+   echo ""
+   echo "The certificates have been created in the OUPUT directory"
+   echo ""
+   echo ""
